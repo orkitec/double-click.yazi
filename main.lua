@@ -5,6 +5,7 @@
 local M = {}
 
 local click_state = { phase = 0, last_up_time = 0, url = nil }
+local header_state = { phase = 0, last_up_time = 0 }
 local threshold = 0.3
 
 function M:setup(opts)
@@ -58,6 +59,35 @@ function M:setup(opts)
     else
       click_state.phase = 0
       click_state.url = nil
+    end
+  end
+
+  -- Double-click header path to go up one directory
+  function Header:click(event, up)
+    if event.is_middle or event.is_right then
+      return
+    end
+
+    local now = ya.time()
+
+    if not up then
+      if header_state.phase == 1 and (now - header_state.last_up_time) < threshold then
+        header_state.phase = 2
+      else
+        header_state.phase = 0
+      end
+      return
+    end
+
+    if header_state.phase == 0 then
+      header_state.phase = 1
+      header_state.last_up_time = now
+    elseif header_state.phase == 2 then
+      ya.emit("leave", {})
+      header_state.phase = 0
+      header_state.last_up_time = 0
+    else
+      header_state.phase = 0
     end
   end
 end

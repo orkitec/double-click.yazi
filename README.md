@@ -4,6 +4,7 @@ Double-click to open files and enter directories in [Yazi](https://yazi-rs.githu
 
 - **Double-click a folder** to enter it
 - **Double-click a file** to open it
+- **Double-click the header path** to go up one directory
 - **Single click** selects/reveals the file
 - **Right-click** shows the interactive "open with" menu
 
@@ -39,7 +40,7 @@ Lower values require faster clicking. The macOS system default is around 0.3s.
 
 ## How it works
 
-The plugin overrides `Entity:click` with a state machine that tracks mouse events:
+The plugin overrides `Entity:click` and `Header:click` with state machines that track mouse events:
 
 1. **First click down** — selects the file
 2. **First click up** — records the timestamp
